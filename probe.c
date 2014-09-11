@@ -58,8 +58,8 @@ int main(int argc, const char *argv[]) {
     }
 
     printf(",\n      \"codec\": \"%s\"", codec->name);
-    printf(",\n      \"start_time\": %f", stream->start_time * av_q2d(stream->time_base));
-    printf(",\n      \"duration\": %f", stream->duration * av_q2d(stream->time_base));
+    printf(",\n      \"start_time\": %f", stream->start_time > 0 ? stream->start_time * av_q2d(stream->time_base) : 0.0);
+    printf(",\n      \"duration\": %f", stream->duration > 0 ? stream->duration * av_q2d(stream->time_base) : 0.0);
 
     /* Video-specific fields. */
     if (codec_ctx->codec_type == AVMEDIA_TYPE_VIDEO) {
@@ -67,7 +67,7 @@ int main(int argc, const char *argv[]) {
       printf(",\n      \"height\": %d", codec_ctx->height);
       printf(",\n      \"bit_rate\": %d", codec_ctx->bit_rate);
       printf(",\n      \"frames\": %lld", stream->nb_frames);
-      printf(",\n      \"frame_rate\": %f", av_q2d(stream->avg_frame_rate));
+      printf(",\n      \"frame_rate\": %f", stream->nb_frames > 0 ? av_q2d(stream->avg_frame_rate) : 0.0);
 
       if (codec_ctx->pix_fmt != -1) {
         printf(",\n      \"pixel_format\": \"%s\"", av_get_pix_fmt_name(codec_ctx->pix_fmt));
